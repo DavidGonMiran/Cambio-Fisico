@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<!--
+  PLANTILLA MAESTRA — no se usa directamente, es la referencia que Claude
+  debe seguir para generar cada rutinas/rutina_semXX.html.
+  Los placeholders {{...}} se rellenan con el contenido real de la semana.
+  Estructura, pestañas, CSS y JS NUNCA cambian entre semanas: solo cambia
+  el contenido de cada pestaña. Mismo patrón que WORLD_CUP_TEMPLATE_MASTER.
+-->
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Semana {{NUM_SEMANA}} | Cuaderno Físico | Recomposición Corporal</title>
+
+<!-- ═══ ESTILOS Y SCRIPTS EXTERNOS — GitHub Pages (nunca regenerar) ═══ -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://<usuario>.github.io/Cuaderno-Fisico/assets/style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://<usuario>.github.io/Cuaderno-Fisico/assets/script.js" defer></script>
+<!-- ════════════════════════════════════════════════════════════════════ -->
+
+<!-- Datos de gráficos de la semana (únicos que cambian por HTML) -->
+<script>
+const PROGRESS_DATA = {
+  labels:      {{CHART_LABELS_SEMANAS}},
+  peso:        {{CHART_PESO_KG}},
+  graso:       {{CHART_GRASO_PCT}},
+  adherencia:  {{CHART_ADHERENCIA_PCT}}
+};
+</script>
+
+</head>
+<body data-week="sem{{NUM_SEMANA}}">
+
+<!-- HEADER -->
+<header class="header">
+  <div class="snapshot-banner">
+    <div class="tb">
+      <span class="tb-icon">📍</span>
+      <div>
+        <div class="tb-name cur">ACTUAL</div>
+        <div class="tb-sub">{{PESO_ACTUAL}} kg · {{GRASO_ACTUAL}}% graso</div>
+      </div>
+    </div>
+    <div class="mc">
+      <div class="mc-label">🏋️ Cuaderno Físico · Recomposición</div>
+      <div class="mc-week">SEMANA {{NUM_SEMANA}}</div>
+      <div class="mc-dates">{{FECHA_INICIO}} — {{FECHA_FIN}}</div>
+      <div class="prob-seg-bar">
+        <div class="ps done" style="width:{{PCT_CUMPLIDO}}%"></div>
+        <div class="ps pending" style="width:{{PCT_PENDIENTE}}%"></div>
+        <div class="ps rest" style="width:{{PCT_DESCANSO}}%"></div>
+      </div>
+      <div class="prob-lbls"><span>Cumplido {{PCT_CUMPLIDO}}%</span><span>Descanso {{PCT_DESCANSO}}%</span></div>
+    </div>
+    <div class="tb right">
+      <span class="tb-icon">🎯</span>
+      <div style="text-align:right">
+        <div class="tb-name tgt">OBJETIVO</div>
+        <div class="tb-sub">{{PESO_OBJETIVO}} kg · {{GRASO_OBJETIVO}}% graso</div>
+      </div>
+    </div>
+  </div>
+  <nav class="tabs">
+    <button class="tab-btn active" onclick="switchTab('resumen',this)">📊 Resumen</button>
+    <button class="tab-btn" onclick="switchTab('entreno',this)">🏋️ Entreno</button>
+    <button class="tab-btn" onclick="switchTab('dieta',this)">🍽️ Dieta</button>
+    <button class="tab-btn" onclick="switchTab('progreso',this)">📈 Progreso</button>
+    <button class="tab-btn" onclick="switchTab('notas',this)">📝 Notas</button>
+  </nav>
+</header>
+
+<main class="main">
+
+<!-- ═══ TAB RESUMEN ═══ -->
+<div id="tab-resumen" class="tc active">
+
+  <!-- RETRO BANNER (retroalimentación semana anterior) -->
+  <div class="retro">
+    <div class="rl">🔄 Ajuste vs semana anterior</div>
+    <div class="rt">{{RETRO_AJUSTE}}</div>
+  </div>
+  <!-- Nota: usar 4 celdas .rl/.rt como en el original si hay más contenido -->
+
+  <div class="g3" style="margin-bottom:14px">
+    <div class="mt">
+      <div class="mt-val" style="color:var(--gold)">{{PESO_ACTUAL}} kg</div>
+      <div class="mt-lbl">Peso<br><span style="font-family:'JetBrains Mono',monospace;font-size:.65rem">Sem. ant. {{PESO_SEMANA_ANTERIOR}} kg</span></div>
+    </div>
+    <div class="mt">
+      <div class="mt-val" style="color:var(--green)">{{GRASO_ACTUAL}}%</div>
+      <div class="mt-lbl">% Graso est.<br><span style="font-family:'JetBrains Mono',monospace;font-size:.65rem">Sem. ant. {{GRASO_SEMANA_ANTERIOR}}%</span></div>
+    </div>
+    <div class="mt">
+      <div class="mt-val" style="color:var(--cur2)">{{ADHERENCIA_PCT}}%</div>
+      <div class="mt-lbl">Adherencia dieta<br><span style="font-family:'JetBrains Mono',monospace;font-size:.65rem">RPE medio {{RPE_MEDIO}}</span></div>
+    </div>
+  </div>
+
+  <!-- CHECKLIST READINESS SEMANAL -->
+  <div class="chk">
+    <div class="chk-title">⚠ CHECKLIST READINESS — SEMANA {{NUM_SEMANA}}</div>
+    <div class="chk-grid">
+      <div class="chk-item {{CHK1_CLASE}}"><span class="chk-icon">{{CHK1_ICONO}}</span><span><strong>Gemelo izquierdo estable:</strong> {{CHK1_TEXTO}}</span></div>
+      <div class="chk-item {{CHK2_CLASE}}"><span class="chk-icon">{{CHK2_ICONO}}</span><span><strong>Adherencia dieta ≥80%:</strong> {{CHK2_TEXTO}}</span></div>
+      <div class="chk-item {{CHK3_CLASE}}"><span class="chk-icon">{{CHK3_ICONO}}</span><span><strong>RPE medio controlado (≤8):</strong> {{CHK3_TEXTO}}</span></div>
+      <div class="chk-item {{CHK4_CLASE}}"><span class="chk-icon">{{CHK4_ICONO}}</span><span><strong>Descanso suficiente:</strong> {{CHK4_TEXTO}}</span></div>
+    </div>
+    <div class="chk-result {{CHK_RESULT_CLASE}}"><span>{{CHK_RESULT_ICONO}}</span><span>{{CHK_RESULT_RESUMEN}}</span></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">⚡ FOCO DE LA SEMANA</div>
+    <div class="g2">
+      <div>
+        <div class="sl">Objetivo</div>
+        <div style="font-size:.82rem;line-height:1.5">{{RESUMEN_OBJETIVO}}</div>
+      </div>
+      <div>
+        <div class="sl">Prioridad técnica</div>
+        <div style="font-size:.82rem;line-height:1.5">{{RESUMEN_FOCO}}</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ TAB ENTRENO ═══ -->
+<div id="tab-entreno" class="tc">
+  <div class="disc"><strong>GEMELO IZQUIERDO:</strong> {{ESTADO_GEMELO_SEMANA}}. Ejercicios de impacto/pliometría ajustados en consecuencia.</div>
+
+  <!-- Repetir un .day-card por cada día de entreno de la semana -->
+  <div class="day-card">
+    <div class="day-card__header">
+      <h2>{{DIA_NOMBRE}} · {{DIA_FECHA}}</h2>
+      <span class="day-tag {{DIA_TAG_CLASE}}">{{DIA_TAG_TEXTO}}</span>
+    </div>
+    <!-- Repetir un .exercise por cada ejercicio del día -->
+    <div class="exercise">
+      <input type="checkbox" data-id="{{EJ_ID}}">
+      <div>
+        <div class="exercise__name">{{EJ_NOMBRE}}</div>
+        <div class="exercise__meta">{{EJ_SERIES}}x{{EJ_REPS}} · {{EJ_CARGA}}</div>
+        <textarea class="exercise__notes" data-id="{{EJ_ID}}" placeholder="Notas (técnica, sensación...)"></textarea>
+      </div>
+      <div class="exercise__rpe">RPE {{EJ_RPE}}</div>
+    </div>
+    <!-- fin ejercicio -->
+  </div>
+  <!-- fin día -->
+</div>
+
+<!-- ═══ TAB DIETA ═══ -->
+<div id="tab-dieta" class="tc">
+  <div class="g4" style="margin-bottom:14px">
+    <div class="mt"><div class="mt-val" style="color:var(--gold)">{{KCAL_OBJETIVO}}</div><div class="mt-lbl">Kcal/día</div></div>
+    <div class="mt"><div class="mt-val" style="color:var(--cur2)">{{PROTEINA_G}}</div><div class="mt-lbl">Proteína (g)</div></div>
+    <div class="mt"><div class="mt-val" style="color:var(--green)">{{CARBOS_G}}</div><div class="mt-lbl">Carbohidratos (g)</div></div>
+    <div class="mt"><div class="mt-val" style="color:var(--warn)">{{GRASAS_G}}</div><div class="mt-lbl">Grasas (g)</div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🍽️ Comidas propuestas — día tipo</div>
+    <table class="meal-table">
+      <thead><tr><th>Comida</th><th>Propuesta</th><th>Kcal aprox.</th></tr></thead>
+      <tbody>
+        <!-- Repetir tr por cada comida -->
+        <tr>
+          <td class="meal-name">{{COMIDA_NOMBRE}}</td>
+          <td>{{COMIDA_PROPUESTA}}</td>
+          <td class="kcal">{{COMIDA_KCAL}}</td>
+        </tr>
+        <!-- fin comida -->
+      </tbody>
+    </table>
+    <div class="ins ins-green"><span class="ins-lbl lbl-g">NOTA</span>{{DIETA_NOTA}} (sin legumbres, según preferencia).</div>
+  </div>
+</div>
+
+<!-- ═══ TAB PROGRESO ═══ -->
+<div id="tab-progreso" class="tc">
+  <div class="card">
+    <div class="card-title">📈 Peso y % graso — evolución semanal</div>
+    <div class="ch-lg"><canvas id="weightChart"></canvas></div>
+  </div>
+  <div class="card">
+    <div class="card-title">📊 Adherencia a la dieta — por semana</div>
+    <div class="ch"><canvas id="adherenceChart"></canvas></div>
+  </div>
+</div>
+
+<!-- ═══ TAB NOTAS ═══ -->
+<div id="tab-notas" class="tc">
+  <div class="card">
+    <div class="card-title">📝 Observaciones de la semana</div>
+    <!-- Repetir un .notes-block por observación (ver Observaciones del Excel) -->
+    <div class="notes-block">
+      <div class="notes-block__date">{{NOTA_FECHA}}</div>
+      <p>{{NOTA_TEXTO}}</p>
+    </div>
+    <!-- fin nota -->
+  </div>
+</div>
+
+</main>
+
+<div class="footer">
+  Cuaderno Físico · Recomposición Corporal · Semana {{NUM_SEMANA}}<br>
+  {{FECHA_INICIO}} — {{FECHA_FIN}} · Generado {{FECHA_GENERACION}}<br>
+  Fuente de datos: Cuaderno Físico (Excel) · Perfil_Inicial.md
+</div>
+
+</body>
+</html>
